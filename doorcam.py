@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import platform
 import pickle
+import names
 
 
 # Our list of known face encodings and a matching list of metadata about each face.
@@ -51,7 +52,7 @@ def get_jetson_gstreamer_source(capture_width=1280, capture_height=720, display_
             )
 
 
-def register_new_face(face_encoding, face_image):
+def register_new_face(face_encoding, face_image, lname):
     """
     Add a new person to our list of known faces
     """
@@ -66,6 +67,7 @@ def register_new_face(face_encoding, face_image):
         "seen_count": 1,
         "seen_frames": 1,
         "face_image": face_image,
+        "face_name": lname,
     })
 
 
@@ -151,7 +153,8 @@ def main_loop():
 
             # If this is a brand new face, add it to our list of known faces
             else:
-                face_label = "New face detected!"
+                lname = names.get_full_name()
+                face_label = "New face detected: " + lname
 
                 # Grab the image of the the face from the current frame of video
                 top, right, bottom, left = face_location
@@ -159,7 +162,7 @@ def main_loop():
                 face_image = cv2.resize(face_image, (150, 150))
 
                 # Add the new face to our known face data
-                register_new_face(face_encoding, face_image)
+                register_new_face(face_encoding, face_image, lname)
 
             face_labels.append(face_label)
 
@@ -196,7 +199,7 @@ def main_loop():
                 cv2.putText(frame, visit_label, (x_position + 10, 170), cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 255, 255), 1)
 
         if number_of_recent_visitors > 0:
-            cv2.putText(frame, "Face detections", (5, 18), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+            cv2.putText(frame, "Face detections: " + lname, (5, 18), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
 
