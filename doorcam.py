@@ -147,11 +147,11 @@ def main_loop():
             # If we found the face, label the face with some useful information.
             if metadata is not None:
                 time_at_door = datetime.now() - metadata['first_seen_this_interaction']
-                face_label = f"At door {int(time_at_door.total_seconds())}s"
+                face_label = f"Face detected {int(time_at_door.total_seconds())}s"
 
             # If this is a brand new face, add it to our list of known faces
             else:
-                face_label = "New visitor!"
+                face_label = "New face detected!"
 
                 # Grab the image of the the face from the current frame of video
                 top, right, bottom, left = face_location
@@ -196,7 +196,7 @@ def main_loop():
                 cv2.putText(frame, visit_label, (x_position + 10, 170), cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 255, 255), 1)
 
         if number_of_recent_visitors > 0:
-            cv2.putText(frame, "Visitors at Door", (5, 18), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+            cv2.putText(frame, "Face detections", (5, 18), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
 
